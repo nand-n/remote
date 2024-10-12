@@ -4,6 +4,7 @@ import { PlusOutlined, DeleteOutlined, DownOutlined } from "@ant-design/icons";
 import { Button, Form, Input, Tree } from "antd";
 import type { TreeDataNode, TreeProps } from "antd";
 import { DataNode } from "antd/es/tree";
+import Breadcrumb from "@/components/commons/bradCramp";
 
 const initialTreeData: TreeDataNode[] = [
   {
@@ -129,6 +130,21 @@ const App: React.FC = () => {
 
   return (
     <div className="container mx-auto p-4">
+      <Breadcrumb
+        iconSrc="/icons/submenu.svg"
+        name="Menus"
+        size="large"
+        separator={""}
+      />
+      <br className="mt-4" />
+
+      <Breadcrumb
+        separator={""}
+        iconSrc="/icons/folder.svg"
+        name="Menus"
+        size="small"
+      />
+
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {/* Tree Display */}
         <div className="p-4">
