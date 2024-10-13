@@ -4,6 +4,7 @@ import "./globals.css";
 import AntdConfigProvider from "@/lib/providers/antdProvider";
 import { AntdRegistry } from "@ant-design/nextjs-registry";
 import SideBar from "@/components/sideBar";
+import { StoreProvider } from "@/lib/providers/storeProvider";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -22,8 +23,9 @@ export default function RootLayout({
       <body className={inter.className}>
         <AntdRegistry>
           <AntdConfigProvider>
-            {" "}
-            <SideBar>{children}</SideBar>
+            <StoreProvider>
+              <SideBar>{children}</SideBar>
+            </StoreProvider>
           </AntdConfigProvider>
         </AntdRegistry>
       </body>
