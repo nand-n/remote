@@ -1,20 +1,21 @@
 import React from "react";
-import { Icon } from "./icon";
+import { Breadcrumb as AntdBreadcrumb } from "antd";
+import { IconType } from "react-icons"; // Import for react-icons
 
 interface BreadcrumbProps {
-  iconSrc: string;
+  IconComponent: IconType;
   name: string;
-  size?: "small" | "medium" | "large"; // Dynamically adjust size
+  size?: "small" | "medium" | "large";
   showSeparator?: boolean;
   separator?: string;
 }
 
 const Breadcrumb: React.FC<BreadcrumbProps> = ({
-  iconSrc,
+  IconComponent,
   name,
-  size = "medium", // Default to medium size
-  showSeparator = true, // Show separator by default
-  separator = "/", // Default separator is "/"
+  size = "medium",
+  showSeparator = true,
+  separator = "/",
 }) => {
   const sizeMap = {
     small: { icon: 12, text: "text-sm" },
@@ -22,26 +23,24 @@ const Breadcrumb: React.FC<BreadcrumbProps> = ({
     large: { icon: 24, text: "text-xl" },
   };
 
-  const currentSize = sizeMap[size]; // Get icon and text size
+  const currentSize = sizeMap[size];
 
   return (
-    <div className="flex items-center space-x-2 w-full">
-      {/* Icon with dynamic size */}
-      <div className="flex items-center space-x-1 text-gray-400">
-        <Icon
-          src={iconSrc}
-          width={currentSize.icon * 4}
-          height={currentSize.icon * 4}
-          alt={name}
-        />
-      </div>
+    <AntdBreadcrumb>
+      <AntdBreadcrumb.Item>
+        <div className="flex items-center space-x-2 w-full">
+          <div className="flex items-center space-x-1 text-gray-400">
+            <IconComponent
+              style={{ fontSize: currentSize.icon, color: "gray" }}
+            />
+          </div>
 
-      {/* Optional separator, only shown if showSeparator is true */}
-      {showSeparator && <span className="text-gray-400">{separator}</span>}
+          {showSeparator && <span className="text-gray-400">{separator}</span>}
 
-      {/* Title with dynamic size */}
-      <h1 className={`font-bold ${currentSize.text}`}>{name}</h1>
-    </div>
+          <p className={`font-normal ${currentSize.text}`}>{name}</p>
+        </div>
+      </AntdBreadcrumb.Item>
+    </AntdBreadcrumb>
   );
 };
 
