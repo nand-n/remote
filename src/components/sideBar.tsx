@@ -157,7 +157,9 @@ const SideBar: React.FC<SideBarComponentProps> = ({ children }) => {
         </nav>
       </aside>
 
-      <main className={`transition-all duration-300 flex-1 p-6`}>
+      <main
+        className={`transition-all duration-300 flex-1 p-6 h-full overflow-y-auto`}
+      >
         {children}
       </main>
     </div>
