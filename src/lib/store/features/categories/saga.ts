@@ -6,9 +6,12 @@ import {
     fetchParentsStart,
     fetchParentsFailure,
     fetchParentsSuccess,
+    addChildCategorySuccess,
+    addChildCategoryFailure,
+    addChildCategoryStart,
 
 } from './slice';
-import { getAllParrentCategories, getCategoryHierarchy } from './api'; // Ensure this imports your API function
+import { addChildCategory, getAllParrentCategories, getCategoryHierarchy } from './api'; 
 import { PayloadAction } from '@reduxjs/toolkit';
 import { Category } from '@/types/categories';
 
@@ -38,10 +41,30 @@ function* fetchParentsCategory() {
     }
 }
 
+
+function* addChildCategorySaga(action: PayloadAction<Category>) {
+    try {
+        const response:Category = yield call(addChildCategory, action.payload);
+        yield put(addChildCategorySuccess(response)); // Dispatch success action with response data
+    } catch (error) {
+        if (error instanceof Error) {
+            yield put(addChildCategoryFailure(error.message)); // Dispatch failure action with error message
+        } else {
+            yield put(addChildCategoryFailure('Unknown error happened'));
+        }
+    }
+}
+
+
+
 export function* watchFetchCategoryHierarchy() {
     yield takeLatest(fetchCategoriesStart.type, fetchCategoryHierarchySaga);
 }
 
 export function* watchFetchParentsCategory() {
     yield takeLatest(fetchParentsStart.type, fetchParentsCategory);
+}
+
+export function* watchAddChildCategory() {
+    yield takeLatest(addChildCategoryStart.type, addChildCategorySaga);
 }
