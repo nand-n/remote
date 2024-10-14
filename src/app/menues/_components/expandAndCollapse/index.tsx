@@ -2,7 +2,7 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/lib/store/store";
-import { collapseAll, expandAll } from "@/lib/store/features/treeSlice/slice";
+import { expandAll, collapseAll } from "@/lib/store/features/treeSlice/slice";
 import { Category } from "@/types/categories";
 
 function ExpandAndCollapse() {
@@ -28,11 +28,10 @@ function ExpandAndCollapse() {
     return keys;
   };
 
-  const handleExpandAll = () => {
+  const handleExpandAll = async () => {
     if (Array.isArray(categories)) {
       const allKeys = generateAllKeys(categories);
-      console.log(allKeys);
-      dispatch(expandAll(allKeys));
+      dispatch(await expandAll(allKeys));
     } else {
       console.error("Categories is not an array:", categories);
     }
