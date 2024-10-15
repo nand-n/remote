@@ -7,6 +7,6 @@ export async function GET() {
         const response = await axios.get(`${BASE_URL}/categories/root-nodes`);
         return NextResponse.json(response.data);
     } catch (error:any) {
-        return NextResponse.json({ error: error.message }, { status: 500 });
+        return NextResponse.json({ error: error }, { status: 500 });
     }
 }
