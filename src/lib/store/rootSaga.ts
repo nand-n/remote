@@ -1,14 +1,16 @@
 import { all } from "redux-saga/effects";
-import { watchIncrementAsync } from "./features/counter/saga";
-import {watchAddChildCategory, watchFetchCategoryHierarchy, watchFetchParentsCategory} from './features/categories/saga'
+import {watchAddChildCategory, watchDeleteCategory, watchFetchCategoryHierarchy, watchFetchParentsCategory, watchUpdateCategory} from './features/categories/saga'
 import { watchTreeActions } from "./features/treeSlice/saga";
+import watchToastSaga from "./features/toast/saga";
 
 export function* rootSaga(){
     yield all([
-        watchIncrementAsync() ,
         watchFetchCategoryHierarchy(),
         watchFetchParentsCategory(),
         watchTreeActions(),
-        watchAddChildCategory()
+        watchAddChildCategory(),
+        watchUpdateCategory(),
+        watchDeleteCategory(),
+        watchToastSaga()
     ])
 }
