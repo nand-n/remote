@@ -3,7 +3,13 @@ export interface Category {
     name: string;
     parentId: string | null;
     depth:number,
-    children?:[]
+    children?: Category[];
 }
 
-
+export interface UpdateCategoryData {
+    id: string;
+    updateData: {
+        name?: string;
+        parentId?: string | null;
+    };
+}
