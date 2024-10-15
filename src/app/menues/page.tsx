@@ -8,31 +8,36 @@ import Breadcrumb from "@/components/commons/bradCramp";
 import BreadcrumbWithIcon from "@/components/commons/breadCrambWtihIcon";
 import { AiOutlineAppstore, AiOutlineFolder } from "react-icons/ai";
 import CustomSelect from "@/app/menues/_components/customSelect.tsx/customSelect";
-import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/lib/store/store";
 import ExpandAndColapse from "./_components/expandAndCollapse";
 import LoadingTreeSkeleton from "./_components/loading/page";
-import { Category } from "@/types/categories";
+import { Category, UpdateCategoryData } from "@/types/categories";
 import { v4 as uuidv4 } from "uuid";
 import { expandAll } from "@/lib/store/features/treeSlice/slice";
-import { useAppDispatch } from "@/lib/store/hook";
+import { useAppDispatch, useAppSelector } from "@/lib/store/hook";
 import {
   addChildCategoryStart,
+  deleteCategoryStart,
   fetchCategoriesStart,
+  updateCategoryStart,
 } from "@/lib/store/features/categories/slice";
+import { findNodeByKey } from "@/utils/findNode";
+import { MdDelete } from "react-icons/md";
 
-interface CustomDataNode extends DataNode {
+export interface CustomDataNode extends DataNode {
   depth?: number;
   parent?: string;
 }
 
 const App: React.FC = () => {
-  const { categories, rootNodeId, sucessfullyAdded } = useSelector(
-    (state: RootState) => state.categories
-  );
-
-  const loading = useSelector((state: RootState) => state.categories.loading);
-  // const error = useSelector((state: RootState) => state.categories.error);
+  const {
+    categories,
+    rootNodeId,
+    sucessfullyAdded,
+    loading,
+    updateLoading,
+    deleteLoading,
+  } = useAppSelector((state: RootState) => state.categories);
 
   const [treeData, setTreeData] = useState<TreeDataNode[]>([]);
   const [selectedNode, setSelectedNode] = useState<DataNode | null>(null);
@@ -61,8 +66,7 @@ const App: React.FC = () => {
     }
   }, [categories]);
 
-  console.log(categories.length, "categor");
-  const expandedKeys = useSelector(
+  const expandedKeys = useAppSelector(
     (state: RootState) => state.tree.expandedKeys
   );
 
@@ -83,40 +87,6 @@ const App: React.FC = () => {
     }
   };
 
-  // const handleAddItem = (data: CustomDataNode) => {
-  //   if (!selectedNode) return;
-
-  //   const updatedTree = [...treeData];
-  //   const newItem: CustomDataNode = {
-  //     title: "New Item",
-  //     key: uuidv4(),
-  //     parent: data.parent,
-  //     depth: (data.depth || 0) + 1,
-  //   };
-
-  //   const node = findNodeByKey(selectedNode.key as string, updatedTree);
-  //   if (node) {
-  //     node.children = node.children ? [...node.children, newItem] : [newItem];
-  //     setTreeData(updatedTree);
-  //   }
-  // };
-
-  // Recursively find node by key
-  const findNodeByKey = (key: string, nodes: DataNode[]): DataNode | null => {
-    for (const node of nodes) {
-      if (node.key === key) {
-        return node;
-      }
-      if (node.children) {
-        const result = findNodeByKey(key, node.children);
-        if (result) {
-          return result;
-        }
-      }
-    }
-    return null;
-  };
-
   const handleAddItem = (data: CustomDataNode) => {
     if (!selectedNode) return;
 
@@ -131,8 +101,6 @@ const App: React.FC = () => {
     const node = findNodeByKey(String(selectedNode.key), updatedTree);
     if (node) {
       node.children = node.children ? [...node.children, newItem] : [newItem];
-      // setTreeData(updatedTree);
-
       dispatch(
         addChildCategoryStart({
           parentId: newItem.parent ?? null,
@@ -167,19 +135,24 @@ const App: React.FC = () => {
     );
   };
 
-  const updateMenuItem = (values: { name: string }) => {
+  const updateMenuItem = (values: any) => {
     if (selectedNode) {
-      const updatedTree = [...treeData];
-      const node = findNodeByKey(selectedNode.key as string, updatedTree);
-      if (node) {
-        node.title = values.name;
-        setTreeData(updatedTree);
-      }
+      const data: UpdateCategoryData = {
+        id: String(selectedNode.key),
+        updateData: {
+          name: String(values.name),
+          parentId: values.parent ? String(values.parent) : null,
+        },
+      };
+
+      dispatch(updateCategoryStart(data));
     }
+  };
+  const handleDelete = (id: string) => {
+    dispatch(deleteCategoryStart(id));
   };
 
   const onExpand = (newExpandedKeys: any[]) => {
-    console.log(expandedKeys?.length, newExpandedKeys, "newExpandedKeys");
     dispatch(expandAll(newExpandedKeys));
   };
 
@@ -227,9 +200,19 @@ const App: React.FC = () => {
         <div className="grid p-4">
           {selectedNode && (
             <Form layout="vertical" form={form} onFinish={updateMenuItem}>
-              <Form.Item label="Menu ID" name="menuId">
-                <Input readOnly className="h-12" />
-              </Form.Item>
+              <div className="flex justify-center items-center gap-4 w-full">
+                <Form.Item label="Menu ID" name="menuId" className="w-full">
+                  <Input readOnly className="h-12 " />
+                </Form.Item>
+                <Button
+                  loading={deleteLoading}
+                  danger
+                  onClick={() => handleDelete(String(selectedNode.key))}
+                  icon={<MdDelete size={20} />}
+                  className="flex items-center gap-2"
+                />
+              </div>
+
               <div className="w-full lg:w-1/2">
                 <Form.Item label="Depth" name="depth">
                   <Input readOnly className="h-12 bg-gray-200" />
@@ -243,6 +226,7 @@ const App: React.FC = () => {
 
                 <div className="w-full h-16">
                   <Button
+                    loading={updateLoading}
                     block
                     type="primary"
                     htmlType="submit"
