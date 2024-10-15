@@ -78,7 +78,7 @@ export const createCategoryWithChildren = async (categoryData: { name: string, c
  * @param {string} [updateData.parentId] - The new parent category ID.
  * @returns {Promise<any>} - The response data.
  */
-export const updateCategory = async (id: string, updateData: { name?: string; parentId?: string }): Promise<any> => {
+export const updateCategory = async (id: string, updateData: { name?: string; parentId?: string }| Category): Promise<any> => {
     const response = await axios.put(`${NEXT_API_BASE_URL}/update/${id}`, updateData);
     return response.data;
 };
