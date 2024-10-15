@@ -1,8 +1,8 @@
 import { configureStore } from '@reduxjs/toolkit'
 import createSagaMidleware from 'redux-saga'
-import counterReducer from "./features/counter/slice";
 import categoriesSlice from './features/categories/slice';
 import treeSlice from './features/treeSlice/slice';
+import toastSlice from './features/toast/slice';
 
 import { rootSaga } from './rootSaga';
 
@@ -12,9 +12,9 @@ export const makeStore = ()=>{
     const store =  configureStore({
         middleware:(getDefaultMiddleware) => getDefaultMiddleware().concat(sagaMidleware),
         reducer: {
-            counter : counterReducer,
             categories:categoriesSlice,
             tree: treeSlice,
+            toast:toastSlice
 
         }
     });
