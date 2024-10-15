@@ -4,6 +4,7 @@ import { ReactNode, useState } from "react";
 import { CiSettings } from "react-icons/ci";
 import { useMediaQuery } from "react-responsive";
 import { Icon } from "./commons/icon";
+import ToastMessage from "./commons/toastMessage";
 
 interface SideBarComponentProps {
   children: ReactNode;
@@ -94,6 +95,7 @@ const SideBar: React.FC<SideBarComponentProps> = ({ children }) => {
 
   return (
     <div className="flex h-screen">
+      <ToastMessage />
       <aside
         className={`bg-blue_gray text-white h-full transition-all duration-300 z-50 rounded-r-xl ${
           collapsed ? "w-20" : "w-80"
