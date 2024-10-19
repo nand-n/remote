@@ -1,4 +1,4 @@
-import useAuthStore from "@/store/uistate/auth/login/useAuth";
+import useAuthStore from "@/lib/store/uistate/auth/login/useAuth";
 import { AssignRoleProp, DataProp, IsActiveDataProp } from "@/types/features/users";
 import { crudRequest } from "@/utils/crudRequest";
 import { useMutation, useQueryClient } from "react-query";
