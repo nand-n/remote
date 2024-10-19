@@ -22,7 +22,8 @@ const config: Config = {
         arctic_blue:'#253BFF',
         blue_gray:'#101828',
         blue_gray_800:'#1D2939',
-        gray_300:'#D0D5DD'
+        gray_300:'#D0D5DD',
+        blackBg: "#181C31",
       },
     },
   },
