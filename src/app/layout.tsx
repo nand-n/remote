@@ -5,6 +5,7 @@ import AntdConfigProvider from "@/lib/providers/antdProvider";
 import { AntdRegistry } from "@ant-design/nextjs-registry";
 import ConditionalNav from "@/lib/providers/conditionalNav";
 import ReactQueryWrapper from "@/lib/providers/reactQueryProvider";
+import { ThemeProvider } from "next-themes";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -32,13 +33,19 @@ export default function RootLayout({
         />
       </head>
       <body className={inter.className}>
-        <ReactQueryWrapper>
-          <AntdRegistry>
-            <AntdConfigProvider>
-              <ConditionalNav>{children}</ConditionalNav>
-            </AntdConfigProvider>
-          </AntdRegistry>
-        </ReactQueryWrapper>
+        <ThemeProvider
+          enableSystem={false}
+          attribute="class"
+          defaultTheme="light"
+        >
+          <ReactQueryWrapper>
+            <AntdRegistry>
+              <AntdConfigProvider>
+                <ConditionalNav>{children}</ConditionalNav>
+              </AntdConfigProvider>
+            </AntdRegistry>
+          </ReactQueryWrapper>
+        </ThemeProvider>
       </body>
     </html>
   );
